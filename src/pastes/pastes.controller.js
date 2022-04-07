@@ -69,6 +69,7 @@ function pasteExists(req, res, next) {
     const { pasteId } = req.params;
     const foundPaste = pastes.find(paste => paste.id === Number(pasteId));
     if (foundPaste) {
+        res.locals.paste = foundPaste;
         return next();
     }
 
@@ -79,25 +80,23 @@ function pasteExists(req, res, next) {
 }
 
 function read(req, res) {
-    const { pasteId } = req.params;
-    const foundPaste = pastes.find(paste => paste.id === Number(pasteId));
-    res.json({ data: foundPaste });
+    const paste = res.locals.paste;
+    res.json({ data: paste });
 }
 
 // ** UPDATE HANDLER **
 function update(req, res){
-    const {pasteId} = req.params;
-    const foundPaste = pastes.find(paste => paste.id === Number(pasteId));
+    const paste = res.locals.paste
     const {data: {name, syntax, expiration, exposure, text} = {}} = req.body;
 
     // Update the paste
-    foundPaste.name = name;
-    foundPaste.syntax = syntax;
-    foundPaste.expiration = expiration;
-    foundPaste.exposure = exposure;
-    foundPaste.text = text;
+    paste.name = name;
+    paste.syntax = syntax;
+    paste.expiration = expiration;
+    paste.exposure = exposure;
+    paste.text = text;
 
-    res.json({data: foundPaste});
+    res.json({data: paste});
 }
 
 
@@ -105,8 +104,8 @@ function update(req, res){
 function destroy(req, res){ // the 'delete' paste handler cannot be named 'delete' because 'delete' is a reserved JS word
     const {pasteId}= req.params;
     const index = pastes.findIndex(paste => paste.id === Number(pasteId));
-    const deletedPastes = pastes.splice(index, 1); // splice returns an array of the delted elements, even if it is one element
-    res.sendStatus(204);
+    const deletedPastes = pastes.splice(index, 1); // splice returns an array of the deleted elements, even if it is one element
+    res.status(204).send({data: deletedPastes});
 }
 
 module.exports = {
