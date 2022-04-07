@@ -2,7 +2,8 @@ const pastes = require("../data/pastes-data");
 
 // ** RETURN ALL DATA FROM PASTES-DATA
 function list(req, res) {
-    res.json({ data: pastes });
+    const {userId} = req.params;
+    res.json({ data: pastes.filter(userId ? paste => paste.user_id == userId : () => true) });
 }
 
 

@@ -1,4 +1,4 @@
-const router = require("express").Router(); // create a new instance of Express Router
+const router = require("express").Router({mergeParams: true}); // create a new instance of Express Router
 const controller = require("./pastes.controller"); // imports the '/pastes' controller previously created
 const methodNotAllowed = require("../errors/methodNotAllowed");
 
